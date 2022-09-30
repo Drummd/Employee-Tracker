@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const express = require('express');
 const mysql = require('mysql2');
- require('console.table');
+require('console.table');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -15,7 +15,7 @@ const db = mysql.createConnection(
     password: 'mark1124',
     database: 'staff_db'
   },
-  console.log(`Connected to the staff_db database.`)
+    console.log(`Connected to the database.`)
 );
 
 db.connect(err => {
@@ -144,12 +144,12 @@ let employeeTrack = function () {
         }
       ]).then((answers) => {
         db.query(`INSERT INTO department (name) VALUES (?)`, [answers.department], (err, result) => {
-          if (err) throw err;
+          
           console.log(`Added ${answers.department} to the database`)
           employeeTrack();
         })
-      }) 
-    } else if (answers.prompt === 'Add role') {
+      })
+    } else if (answers.prompt === 'Add Role') {
       db.query(`SELECT * FROM department`, (err, result) => {
         if (err) throw err;
         inquirer.prompt([
@@ -185,7 +185,7 @@ let employeeTrack = function () {
             message: 'Which department does the role belong.',
             choices: () => {
               let array = [];
-              for(var i = 0; i < result.length; i++) {
+              for (var i = 0; i < result.length; i++) {
                 array.push(result[i].name);
               }
               return array;
@@ -203,55 +203,55 @@ let employeeTrack = function () {
             employeeTrack();
           })
         })
-      }) 
-      }else if (answers.prompt === 'Update Employee Role') {
-        db.query(`SELECT * FROM employee, role`, (err, result) => {
-          if(err) throw err;
-          inquirer.prompt([
-            {
-              type: 'list',
-              name: 'employee',
-              message: 'Which employees role do you want to update',
-              choices: () => {
-                let array = [];
-                for(var i = 0; i < result.length; i++) {
-                  array.push(result[i].last_name);
-                }
-                let employeeArray = [...new Set(array)];
-                return employeeArray;
+      })
+    } else if (answers.prompt === 'Update Employee Role') {
+      db.query(`SELECT * FROM employee, role`, (err, result) => {
+        if (err) throw err;
+        inquirer.prompt([
+          {
+            type: 'list',
+            name: 'employee',
+            message: 'Which employees role do you want to update',
+            choices: () => {
+              let array = [];
+              for (var i = 0; i < result.length; i++) {
+                array.push(result[i].last_name);
               }
-            },
-            {
-              type: 'list',
-              name: 'role',
-              message: 'What is the new role.',
-              choices: () => {
-                let array = [];
-                for(var i = 0; i < result.length; i++) {
-                  array.push(result[i].title);
-                }
-                let newArray = [...new Set(array)];
-                return newArray;
-              }
+              let employeeArray = [...new Set(array)];
+              return employeeArray;
             }
-          ]).then((answers) => {
-            for(var i = 0; i < result.length; i++) {
-              if (result[i].last_name === answers.employee) {
-                let name = result[i];
+          },
+          {
+            type: 'list',
+            name: 'role',
+            message: 'What is the new role.',
+            choices: () => {
+              let array = [];
+              for (var i = 0; i < result.length; i++) {
+                array.push(result[i].title);
               }
+              let newArray = [...new Set(array)];
+              return newArray;
             }
-            for (var i = 0; i < result.length; i++) {
-              if(result[i].last_name === answers.role) {
-                let role = result[i];
-              }
+          }
+        ]).then((answers) => {
+          for (var i = 0; i < result.length; i++) {
+            if (result[i].last_name === answers.employee) {
+              let name = result[i];
             }
-            db.query(`UPDATE employee SET ? WHERE ?`, [{role_id: role}, {last_name: name}], (err,result) => {
-              if (err) throw err;
-              console.log(`Updated ${answers.employee} role to the database`)
-              employeeTrack()
-            })
+          }
+          for (var i = 0; i < result.length; i++) {
+            if (result[i].last_name === answers.role) {
+              let role = result[i];
+            }
+          }
+          db.query(`UPDATE employee SET ? WHERE ?`, [{ role_id: role }, { last_name: name }], (err, result) => {
+            if (err) throw err;
+            console.log(`Updated ${answers.employee} role to the database`)
+            employeeTrack()
           })
         })
+      })
     } else if (answers.prompt === 'Quit Program') {
       db.end();
       console.log('Thank you, goodbye')
@@ -262,51 +262,51 @@ let employeeTrack = function () {
 
 
 //add role
-  //update employee role
+//update employee role
 
 
 
-  //may have to change query statements to backtics
-  //remember to use async and await 
+//may have to change query statements to backtics
+//remember to use async and await 
 
-  //--What would you like to do ---
-  //view all employees
-  //add employee
-  //update employee role
-  //view all roles
+//--What would you like to do ---
+//view all employees
+//add employee
+//update employee role
+//view all roles
 
-  //view all departments
-  //add department
-  //quit
-
-
-
-  // app.post('/api/add-movie', (req,res) => {
-  //     const title = req.body.movie;
-  //     db.query('INSERT INTO movies(movie_name) VALUES(?)', title, function (err, results) {
-  //         console.log(results);
-  //         res.status(418), res.json('A movie listing has been created')
-  //     });
-  // })
-  // app.get('/api/movies', (req,res) => {
-  //     db.query('SELECT * FROM movie_name', function (err, results) {
-  //         console.log(results);
-  //         res.status(418), res.json(results)
-  //     });
-  // })
-
-  // app.delete('/api/movies/:id', (req,res) => {
-  //     const movieID = req.params.id;
-  //     db.query('DELETE FROM movies WHERE id = ?', movieID, function (err, results) {
-  //         console.log(results);
-  //         res.status(418), res.json(results)
-  //     });
-
-  // })
+//view all departments
+//add department
+//quit
 
 
 
+// app.post('/api/add-movie', (req,res) => {
+//     const title = req.body.movie;
+//     db.query('INSERT INTO movies(movie_name) VALUES(?)', title, function (err, results) {
+//         console.log(results);
+//         res.status(418), res.json('A movie listing has been created')
+//     });
+// })
+// app.get('/api/movies', (req,res) => {
+//     db.query('SELECT * FROM movie_name', function (err, results) {
+//         console.log(results);
+//         res.status(418), res.json(results)
+//     });
+// })
 
-  app.listen(PORT, () => {
-    console.log('app now running on http://localhost:3001/');
-  })
+// app.delete('/api/movies/:id', (req,res) => {
+//     const movieID = req.params.id;
+//     db.query('DELETE FROM movies WHERE id = ?', movieID, function (err, results) {
+//         console.log(results);
+//         res.status(418), res.json(results)
+//     });
+
+// })
+
+
+
+
+app.listen(PORT, () => {
+  console.log('app now running on http://localhost:3001/');
+})
