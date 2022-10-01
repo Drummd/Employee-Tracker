@@ -186,15 +186,15 @@ let employeeTrack = function () {
             choices: () => {
               let array = [];
               for (var i = 0; i < result.length; i++) {
-                array.push(result[i].name);
+                array.push(result[i].department_name);
               }
               return array;
             }
           }
         ]).then((answers) => {
           for (var i = 0; i < result.length; i++) {
-            if (result[i].name === answers.department) {
-              let department = results[i];
+            if (result[i].department_name === answers.department) {
+              let department = results[i].id;
             }
           }
           db.query(`INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`, [answers.role, answers.salary, department.id], (err, result) => {
